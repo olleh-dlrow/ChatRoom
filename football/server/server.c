@@ -16,7 +16,14 @@ void logout(int signum){
     bzero(&msg,sizeof(msg));
     msg.type = CHAT_FIN;
     strcpy(msg.msg,"The server has logout!\n");
-    send(epollfd, (void *)&msg, sizeof(msg), 0);
+    for(int i = 0;i < MAX;i++){
+        if(rteam[i].online){
+            send(rteam[i].fd, (void *)&msg, sizeof(msg), 0);
+        } 
+        if(bteam[i].online){
+            send(bteam[i].fd, (void *)&msg, sizeof(msg), 0);
+        }
+    }
     close(epollfd);
     exit(1);
 }
