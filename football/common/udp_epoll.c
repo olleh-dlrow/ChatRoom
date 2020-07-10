@@ -66,7 +66,8 @@ int udp_connect(struct sockaddr_in *client){
         perror("socket_udp");
         return -1;
     }
-    if(connect(sockfd, (struct sockaddr *)&client,sizeof(struct sockaddr)) < 0){
+    if(connect(sockfd, (struct sockaddr *)client,sizeof(struct sockaddr)) < 0){
+        perror("connect");
         return -1;
     }
     return sockfd;
