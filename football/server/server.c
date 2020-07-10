@@ -10,10 +10,21 @@ struct Score score;
 int repollfd, bepollfd;
 struct User *rteam, *bteam;
 
+int epollfd;   //主反应堆
+
+void logout(int signum){
+    struct ChatMsg msg;
+	bzero(&msg,sizeof(msg));
+	strcpy(msg.msg,"The server has logout!\n");
+    msg.type = CHAT_FIN;
+    send(epollfd, (void *)&msg, sizeof(msg), 0);
+    close(epollfd);
+    exit(1);
+}
+
 int main(int argc,char **argv){
     int opt;
     int listener;
-    int epollfd;   //主反应堆
 
     //分别为两队创建线程
     pthread_t red_t,blue_t;
@@ -100,6 +111,8 @@ int main(int argc,char **argv){
     struct sockaddr_in client;
     bzero(&client,sizeof(client));
     socklen_t len = sizeof(client);
+	
+	signal(SIGINT,logout);
 
     while(1){
         DBG(YELLOW"Main Reactor"NONE" : Waiting for client\n");

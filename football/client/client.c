@@ -132,8 +132,8 @@ int main(int argc, char **argv)
                     }
                 }
                 //发送一条消息给客户端，查看从反应堆的，do_work是否返回
-                // char buff[512] = {0};
-                // bzero(buff,sizeof(buff));
+                char buff[512] = {0};
+                bzero(buff,sizeof(buff));
                 // sprintf(buff,"%s","Hello!\n");
                 // sendto(sockfd, &buff, strlen(buff), 0, (struct sockaddr *)&server, len);
                 // bzero(buff,sizeof(buff));
@@ -142,6 +142,7 @@ int main(int argc, char **argv)
                 signal(SIGINT, logout);
                 while(1){
                     struct ChatMsg msg;
+                    bzero(&msg,sizeof(msg));
                     msg.type = CHAT_WALL;
                     DBG(RED"Please Input: \n"NONE);
                     scanf("%[^\n]s",msg.msg);
