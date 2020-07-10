@@ -146,7 +146,10 @@ int main(int argc, char **argv)
                     DBG(RED"Please Input: \n"NONE);
                     scanf("%[^\n]s",msg.msg);
                     getchar();
-                    send(sockfd, (void *)&msg, sizeof(msg), 0);
+                    if(sendto(sockfd, (void *)&msg, sizeof(msg), 0, (struct sockaddr *)&server, len) < 0){
+                        perror("send error");
+                        exit(1);
+                    }
                 }
             }
         }   

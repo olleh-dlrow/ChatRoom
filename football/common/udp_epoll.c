@@ -66,7 +66,8 @@ int udp_connect(struct sockaddr_in *client){
         perror("socket_udp");
         return -1;
     }
-    if(connect(sockfd, (struct sockaddr *)&client,sizeof(struct sockaddr)) < 0){
+    if(connect(sockfd, (struct sockaddr *)client,sizeof(struct sockaddr)) < 0){
+        perror("connect");
         return -1;
     }
     return sockfd;
@@ -86,6 +87,7 @@ int udp_accept(int fd, struct User *user){
     if(ret != sizeof(request)){
         response.type = 1;
         strcpy(response.msg, "Login failed with Data errors!");
+        printf("%s\n",response.msg);
         sendto(fd, (void *)&response, sizeof(response), 0, (struct sockaddr *)&client, len);
         return -1;
     }
@@ -93,6 +95,7 @@ int udp_accept(int fd, struct User *user){
     if(check_online(&request)) {
         response.type = 1;
         strcpy(response.msg, "You are Already Login!");
+        printf("%s\n",response.msg);
         sendto(fd, (void *)&response, sizeof(response), 0, (struct sockaddr *)&client, len);
     } 
 

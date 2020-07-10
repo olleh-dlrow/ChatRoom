@@ -68,6 +68,7 @@ void *thread_run(void *arg){
     struct task_queue *taskQueue = (struct task_queue *)arg;
     while(1){
         struct User *user = task_queue_pop(taskQueue);
+        DBG(L_GREEN"Thread Run"NONE" : Do Work Ready...\n");
         do_work(user);
     }
 }

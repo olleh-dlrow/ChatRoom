@@ -1,6 +1,6 @@
 #include "head.h"
 
-int port = 0;
+int port = 6666;
 char *conf = "./footballd.conf";
 
 struct Map court;
@@ -102,7 +102,7 @@ int main(int argc,char **argv){
     socklen_t len = sizeof(client);
 
     while(1){
-        DBG(YELLOW"Main Reactor"NONE" : Waiting for client");
+        DBG(YELLOW"Main Reactor"NONE" : Waiting for client\n");
         int nfds = epoll_wait(epollfd, events, MAX * 2, -1);
         if(nfds < 0){
             perror("epoll_wait()");
