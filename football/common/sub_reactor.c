@@ -6,7 +6,9 @@ void *sub_reactor(void *arg){
     for(int i = 0;i < NTHREAD; i++){
         pthread_create(&tid[i], NULL, thread_run, (void *)taskQueue);
     }
+
     struct epoll_event ev, events[MAX];
+
     while(1){
         DBG(L_RED"Sub Reactor"NONE" : Epoll Wait...\n");
         int nfds = epoll_wait(taskQueue->epollfd, events, MAX, -1);
@@ -19,7 +21,7 @@ void *sub_reactor(void *arg){
             DBG(L_RED"Sub Reactor"NONE" : %s Ready\n",user->name);
             //如果有数据进来
             if(events[i].events & EPOLLIN){
-                task_queue_push(taskQueue, user);
+                task_queue_push(taskQueue, (struct User *)events[i].data.ptr);
             }
         }
     }

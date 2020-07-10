@@ -139,6 +139,8 @@ int main(int argc, char **argv)
                 // bzero(buff,sizeof(buff));
                 //recv(sockfd,buff,sizeof(buff),0);
                 //DBG(RED"Server Info"NONE" : %s \n",buff);
+                //
+                //发送信号（当执行^C时，自动执行logout函数）
                 signal(SIGINT, logout);
                 while(1){
                     struct ChatMsg msg;
@@ -147,7 +149,21 @@ int main(int argc, char **argv)
                     DBG(RED"Please Input: \n"NONE);
                     scanf("%[^\n]s",msg.msg);
                     getchar();
-                    send(sockfd, (void *)&msg, sizeof(msg), 0);
+                    if(sendto(sockfd, (void *)&msg, sizeof(msg), 0, (struct sockaddr *)&server, len) < 0){
+                        perror("send error");
+                        exit(1);
+                    }
+                    make_non_block(sockfd);
+                    if(recv(sockfd, (void *)&msg,sizeof(msg),0) <= 0){
+                        continue;
+                    } else {
+                        DBG(L_GREEN"Sign From Server"NONE" : %s \n",msg.msg);
+                        if(msg.type & CHAT_FIN){
+                            close(sockfd);
+                            return 0;
+                        }
+                    }
+                    make_block(sockfd);
                 }
             }
         }   

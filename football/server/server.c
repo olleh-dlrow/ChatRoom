@@ -9,6 +9,24 @@ struct BallStatus ball_status;  //球的状态
 struct Score score;
 int repollfd, bepollfd;
 struct User *rteam, *bteam;
+int epollfd;   //主反应堆
+
+void logout(int signum){
+    struct ChatMsg msg;
+    bzero(&msg,sizeof(msg));
+    msg.type = CHAT_FIN;
+    strcpy(msg.msg,"The server has logout!\n");
+    for(int i = 0;i < MAX;i++){
+        if(rteam[i].online){
+            send(rteam[i].fd, (void *)&msg, sizeof(msg), 0);
+        } 
+        if(bteam[i].online){
+            send(bteam[i].fd, (void *)&msg, sizeof(msg), 0);
+        }
+    }
+    close(epollfd);
+    exit(1);
+}
 
 int epollfd;   //主反应堆
 
@@ -113,6 +131,8 @@ int main(int argc,char **argv){
     socklen_t len = sizeof(client);
 	
 	signal(SIGINT,logout);
+
+    signal(SIGINT,logout);
 
     while(1){
         DBG(YELLOW"Main Reactor"NONE" : Waiting for client\n");
