@@ -7,18 +7,19 @@ void do_work(struct User *user){
     //
     //收到一条消息，并打印。 
     //char buff[512] = {0};
+    DBG(L_GREEN"Begin Work"NONE"\n");
     struct ChatMsg msg;
     recv(user->fd, (void *)&msg, sizeof(msg), 0);
     if (msg.type & CHAT_WALL){
-        printf("<%s> ~ %s \n",user->name, msg.msg);
+        printf("\n<%s> ~ %s \n\n",user->name, msg.msg);
     } else if(msg.type & CHAT_MSG){
-        printf("<%s> ~ %s \n",user->name,msg.msg);
+        printf("\n<%s> ~ %s \n\n",user->name,msg.msg);
     } else if(msg.type & CHAT_FIN){
         user->online = 0;
         if(user->team)
             del_event(repollfd,user->fd);
         else del_event(bepollfd,user->fd);
-        printf(GREEN"Server Info"NONE" : %s logout!\n",user->name);
+        printf(GREEN"Server Info"NONE" : %s logout!\n\n",user->name);
         close(user->fd);
     }
     //send(user->fd, buff, strlen(buff), 0);

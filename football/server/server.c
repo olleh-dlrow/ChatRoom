@@ -113,8 +113,11 @@ int main(int argc,char **argv){
             char buff[512] = {0};
             if(events[i].data.fd == listener){
                 //如果listener监听到一个新的用户加入，则创建新的用户
+                DBG(L_GREEN"Listened one new user.\n"NONE);
                 int new_fd = udp_accept(listener,&user);
+                DBG(L_RED"new_fd"NONE" : %d\n",new_fd);
                 if(new_fd > 0){
+                    DBG(YELLOW"Try to Add New User to SubReactor\n"NONE);
                     add_to_sub_reactor(&user);
                 }
                 //先只收数据
