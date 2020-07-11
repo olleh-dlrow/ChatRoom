@@ -41,7 +41,5 @@
 #include "sub_reactor.h"
 #include "udp_epoll.h"
 #include "udp_client.h"
-#include "chat_ui.h"
-#include "send_chat.h"
 
 #endif
