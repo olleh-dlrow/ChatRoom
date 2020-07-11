@@ -28,6 +28,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/epoll.h>
+#include <ncurses.h>
+#include <locale.h>
 
 #include "color.h"
 #include "datatype.h"
@@ -39,4 +41,7 @@
 #include "sub_reactor.h"
 #include "udp_epoll.h"
 #include "udp_client.h"
+#include "chat_ui.h"
+#include "send_chat.h"
+
 #endif

@@ -108,6 +108,13 @@ int udp_accept(int fd, struct User *user){
     } else {
         DBG(GREEN"Info"NONE" : "RED"%s login on %s:%d  <%s>\n",request.name, inet_ntoa(client.sin_addr), ntohs(client.sin_port),request.msg);
     }
+    
+    char buf[512] = {0};
+    sprintf(buf,"有新的小伙伴"YELLOW"%s"NONE"进入聊天室啦~\n",request.name);
+    struct ChatMsg msg;
+    strcpy(msg.msg, buf);
+    msg.type = CHAT_SYS;
+    sendtoall(&msg);
 
     //将respect的信息转移到用户结构中
     strcpy(user->name, request.name);

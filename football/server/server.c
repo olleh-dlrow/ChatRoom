@@ -11,11 +11,12 @@ int repollfd, bepollfd;
 struct User *rteam, *bteam;
 int epollfd;   //主反应堆
 
-void logout(int signum){
+void logout_server(int signum){
     struct ChatMsg msg;
     bzero(&msg,sizeof(msg));
     msg.type = CHAT_FIN;
-    strcpy(msg.msg,"The server has logout!\n");
+    DBG(RED"Server Logout!\n"NONE);
+    /*
     for(int i = 0;i < MAX;i++){
         if(rteam[i].online){
             send(rteam[i].fd, (void *)&msg, sizeof(msg), 0);
@@ -24,21 +25,13 @@ void logout(int signum){
             send(bteam[i].fd, (void *)&msg, sizeof(msg), 0);
         }
     }
+    */
+    sendtoall(&msg);
     close(epollfd);
     exit(1);
 }
 
 int epollfd;   //主反应堆
-
-void logout(int signum){
-    struct ChatMsg msg;
-	bzero(&msg,sizeof(msg));
-	strcpy(msg.msg,"The server has logout!\n");
-    msg.type = CHAT_FIN;
-    send(epollfd, (void *)&msg, sizeof(msg), 0);
-    close(epollfd);
-    exit(1);
-}
 
 int main(int argc,char **argv){
     int opt;
@@ -129,10 +122,8 @@ int main(int argc,char **argv){
     struct sockaddr_in client;
     bzero(&client,sizeof(client));
     socklen_t len = sizeof(client);
-	
-	signal(SIGINT,logout);
 
-    signal(SIGINT,logout);
+    signal(SIGINT,logout_server);
 
     while(1){
         DBG(YELLOW"Main Reactor"NONE" : Waiting for client\n");
